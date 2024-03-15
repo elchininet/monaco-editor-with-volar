@@ -2,7 +2,9 @@ export const VUE = 'vue';
 
 export const INITIAL_CODE = `
 <template>
-    {{ hello }}
+    <div>
+        {{ hello }}
+    </div>
 </template>
 
 <script>

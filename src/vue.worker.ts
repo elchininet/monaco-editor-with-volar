@@ -1,46 +1,44 @@
 // @ts-ignore
 import * as worker from 'monaco-editor-core/esm/vs/editor/editor.worker.js';
 import * as monaco from 'monaco-editor-core';
-import {
-    createTypeScriptWorkerService,
-    activateAutomaticTypeAcquisition,
-    ServiceEnvironment
-} from '@volar/monaco/worker';
+import { resolveConfig } from '@vue/language-service';
+import { createLanguageService } from '@volar/monaco/worker';
+import createTsService, { createJsDelivrDtsHost } from 'volar-service-typescript';
 import ts from 'typescript';
-import { create as createTypeScriptService } from 'volar-service-typescript';
 
 self.onmessage = () => {
 
     worker.initialize((ctx: monaco.worker.IWorkerContext) => {
 
-        const env: ServiceEnvironment = {
-            workspaceFolder: 'file:///',
-            typescript: {
-                uriToFileName: uri => {
-                    console.log('uri ==>', uri);
-                    return uri.substring('file://'.length);
-                },
-                fileNameToUri: fileName => {
-                    console.log('filename ==>', fileName);
-                    return 'file:///' + fileName;
-                },
-            }
+        const compilerOptions: ts.CompilerOptions = {
+            ...ts.getDefaultCompilerOptions(),
+            allowJs: true,
+            jsx: ts.JsxEmit.Preserve,
+            module: ts.ModuleKind.ESNext,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
         };
 
-        activateAutomaticTypeAcquisition(env);
-
-        return createTypeScriptWorkerService({
-            typescript: ts,
-            compilerOptions: {
-                module: ts.ModuleKind.ESNext,
-                moduleResolution: ts.ModuleResolutionKind.NodeNext
-            },
+        return createLanguageService({
             workerContext: ctx,
-            env,
-            languagePlugins: [],
-            servicePlugins: [
-                ...createTypeScriptService(ts)
-            ]
+            config: resolveConfig(
+                {
+                    services: {
+                        typescript: createTsService(
+                            {
+                                dtsHost: createJsDelivrDtsHost()
+                            }
+                        ),
+                    },
+                },
+                compilerOptions as any,
+                undefined,
+                undefined,
+                ts as any
+            ),
+            typescript: {
+                module: ts as any,
+                compilerOptions: compilerOptions as any,
+            },
         });
 
     });

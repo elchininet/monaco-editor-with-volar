@@ -1,6 +1,6 @@
 import { editor, languages, Uri } from 'monaco-editor-core';
-import { LanguageService } from '@volar/language-service';
-import { activateMarkers, activateAutoInsertion, registerProviders } from '@volar/monaco';
+import { LanguageService } from '@vue/language-service';
+import * as volar from '@volar/monaco';
 import { VUE, INITIAL_CODE } from './constants';
 import './styles.scss';
 
@@ -33,23 +33,24 @@ const setup = async () => {
 
     const worker = editor.createWebWorker<LanguageService>({
 		moduleId: `vs/language/${VUE}/${VUE}Worker`,
-		label: VUE
+		label: VUE,
+        createData: {},
 	});
     const getSyncUris = () => editor.getModels().map((model) => model.uri);
-    activateMarkers(
+    volar.editor.activateMarkers(
 		worker,
 		[VUE],
 		VUE,
 		getSyncUris,
 		editor
 	);
-    activateAutoInsertion(
+    volar.editor.activateAutoInsertion(
 		worker,
 		[VUE],
 		getSyncUris,
 		editor
 	);
-    await registerProviders(
+    await volar.languages.registerProvides(
         worker,
         [VUE],
         getSyncUris,

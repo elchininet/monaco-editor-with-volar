@@ -7,9 +7,12 @@
     "start": "webpack serve --open"
   },
   "dependencies": {
-    "@volar/monaco": "^2.1.2",
+    "@volar/monaco": "1.7.9",
+    "@volar/typescript": "1.7.9",
+    "@vue/language-service": "1.8.2",
     "monaco-editor-core": "^0.47.0",
-    "volar-service-typescript": "^0.0.34"
+    "path-browserify": "^1.0.1",
+    "volar-service-typescript": "0.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

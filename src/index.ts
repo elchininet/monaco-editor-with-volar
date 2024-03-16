@@ -2,6 +2,7 @@ import { editor, languages, Uri } from 'monaco-editor-core';
 import { LanguageService } from '@vue/language-service';
 import * as volar from '@volar/monaco';
 import { VUE, INITIAL_CODE } from './constants';
+import { getOrCreateModel } from './utilities';
 import './styles.scss';
 
 let initialized = false;
@@ -55,6 +56,18 @@ const setup = async () => {
         [VUE],
         getSyncUris,
         languages
+    );
+
+    getOrCreateModel(Uri.parse('file:///node_modules/@bookingcom/bui-vue/index.d.ts'), VUE,
+        `
+        import { DefineComponent } from 'vue';
+        declare module 'vue' {
+            export interface GlobalComponents {
+                'BuiContainer': DefineComponent<{ centered?: boolean; variant?: 'vertical' | 'horizontal' | 'partial' }>,
+            }
+        }
+        export {};
+        `
     );
 
 };

@@ -13,9 +13,11 @@ self.onmessage = () => {
         const compilerOptions: ts.CompilerOptions = {
             ...ts.getDefaultCompilerOptions(),
             allowJs: true,
+            checkJs: true,
             jsx: ts.JsxEmit.Preserve,
             module: ts.ModuleKind.ESNext,
-            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            target: ts.ScriptTarget.ESNext,
+            moduleResolution: ts.ModuleResolutionKind.NodeNext,
         };
 
         return createLanguageService({

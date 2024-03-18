@@ -9,7 +9,7 @@
       "declaration": false,
       "noImplicitAny": true,
       "removeComments": true,
-      "baseUrl": "./src",
+      "baseUrl": "./src"
     },
     "include": ["src/**/*.ts"]
   }

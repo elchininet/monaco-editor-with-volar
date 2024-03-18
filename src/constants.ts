@@ -19,4 +19,10 @@ export const INITIAL_CODE = `
         }
     }
 </script>
+
+<style>
+    body {
+        
+    }
+</style>
 `.trim();

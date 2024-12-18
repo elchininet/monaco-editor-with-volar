@@ -1,5 +1,5 @@
 import { editor, languages, Uri } from 'monaco-editor-core';
-import { LanguageService } from '@volar/language-service';
+import { WorkerLanguageService } from '@volar/monaco/worker';
 import { activateMarkers, activateAutoInsertion, registerProviders } from '@volar/monaco';
 import { VUE, INITIAL_CODE } from './constants';
 import './styles.scss';
@@ -31,7 +31,21 @@ const setup = async () => {
         }
     };
 
-    const worker = editor.createWebWorker<LanguageService>({
+    languages.onLanguage(VUE, setup);
+
+};
+
+const registerLanguages = () => {
+    languages.register(
+        {
+            id: VUE,
+            extensions: [`.${VUE}`]
+        }
+    );
+};
+
+const setupWorker = async() => {
+    const worker = editor.createWebWorker<WorkerLanguageService>({
 		moduleId: `vs/language/${VUE}/${VUE}Worker`,
 		label: VUE
 	});
@@ -55,36 +69,42 @@ const setup = async () => {
         getSyncUris,
         languages
     );
-
 };
 
-languages.register(
-    {
-        id: VUE,
-        extensions: [`.${VUE}`]
-    }
-);
+document.addEventListener('DOMContentLoaded', () => {
 
-languages.onLanguage(VUE, setup);
+    setup();
+    registerLanguages();
 
-const instance = editor.create(
-    document.getElementById('editor') as HTMLElement,
-    {
-        theme: 'vs-dark',
-        model: editor.createModel(
-            INITIAL_CODE,
-            VUE,
-            Uri.parse('file:///main.vue')
-        ),
-        automaticLayout: true,
-        scrollBeyondLastLine: false,
-        minimap: {
-            enabled: false,
-        },
-        inlineSuggest: {
-            enabled: false,
-        },
-        'semanticHighlighting.enabled': true,
-    }
-);
+    const instance = editor.create(
+    
+        document.getElementById('editor') as HTMLElement,
+        {
+            theme: 'vs-dark',
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            minimap: {
+                enabled: false,
+            },
+            inlineSuggest: {
+                enabled: false,
+            },
+            'semanticHighlighting.enabled': true,
+        }
+    );
+
+    setupWorker()
+        .then(() => {
+            instance.setModel(
+                editor.createModel(
+                    INITIAL_CODE,
+                    VUE,
+                    Uri.parse('file:///main.vue')
+                )
+            );
+        });
+
+});
+
+
 

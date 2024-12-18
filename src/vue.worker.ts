@@ -5,11 +5,10 @@ import {
     createTypeScriptWorkerLanguageService
 } from '@volar/monaco/worker';
 import ts from 'typescript';
-import { create as createTypeScriptService } from 'volar-service-typescript';
 import { URI } from 'vscode-uri';
 import { createNpmFileSystem } from '@volar/jsdelivr';
-import { createVueLanguagePlugin } from '@vue/language-core';
-import * as vue from 'vue';
+import { createVueLanguagePlugin, resolveVueCompilerOptions } from '@vue/language-core';
+import { getFullLanguageServicePlugins } from '@vue/language-service';
 
 type ServiceEnvironment = Parameters<(typeof createTypeScriptWorkerLanguageService)>[0]['env'];
 
@@ -48,53 +47,12 @@ self.onmessage = () => {
                 createVueLanguagePlugin(
                     ts,
                     compilerOptions,
-                    {
-                        target: 3.3,
-                        lib: 'vue',
-                        extensions: ['.vue'],
-                        vitePressExtensions: [],
-                        petiteVueExtensions: [],
-                        jsxSlots: false,
-                        strictTemplates: false,
-                        skipTemplateCodegen: false,
-                        fallthroughAttributes: false,
-                        dataAttributes: [],
-                        htmlAttributes: ['aria-*'],
-                        optionsWrapper: [
-                            '(await import("vue")).defineComponent(',
-                            ')'
-                        ],
-                        macros: {
-                            defineEmits: ['defineEmits'],
-                            defineExpose: ['defineExpose'],
-                            defineModel: ['defineModel'],
-                            defineOptions: ['defineOptions'],
-                            defineProps: ['defineProps'],
-                            defineSlots: ['defineSlots'],
-                            withDefaults: ['withDefaults'],
-                            
-                        },
-                        composibles: {
-                            useCssModule: ['useCssModule'],
-                            useTemplateRef: ['useTemplateRef']
-                        },
-                        plugins: [],
-                        experimentalDefinePropProposal: false,
-                        experimentalResolveStyleCssClasses: 'scoped',
-                        experimentalModelPropName: {
-                            "": { input: true },
-                            value: {
-                                input: { type: 'text' },
-                                select: true,
-                                textarea: true
-                            }
-                        }
-                    },
+                    resolveVueCompilerOptions({}),
                     uriConverter.asFileName
                 )
             ],
             languageServicePlugins: [
-                ...createTypeScriptService(ts)
+                ...getFullLanguageServicePlugins(ts)
             ]
         });
 

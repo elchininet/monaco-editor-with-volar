@@ -2,18 +2,13 @@ export const VUE = 'vue';
 
 export const INITIAL_CODE = `
 <template>
-    {{ hello }}
+    <div>
+        {{ hello }}
+    </div>
 </template>
 
-<script lang="ts">
-    import { defineComponent } from 'vue';
-    export default defineComponent({
-        name: 'Test',
-        data() {
-            return {
-                hello: 'Hello World!'
-            };
-        }
-    });
+<script setup lang="ts">
+    import { ref } from 'vue';
+    const hello = ref('Hello world!');
 </script>
 `.trim();

@@ -7,8 +7,8 @@ import {
 import ts from 'typescript';
 import { URI } from 'vscode-uri';
 import { createNpmFileSystem } from '@volar/jsdelivr';
-import { createVueLanguagePlugin, resolveVueCompilerOptions } from '@vue/language-core';
-import { getFullLanguageServicePlugins } from '@vue/language-service';
+import { createVueLanguagePlugin, getDefaultCompilerOptions } from '@vue/language-core';
+import { create as createTypeScriptServicePlugin } from 'volar-service-typescript';
 
 type ServiceEnvironment = Parameters<(typeof createTypeScriptWorkerLanguageService)>[0]['env'];
 
@@ -47,12 +47,12 @@ self.onmessage = () => {
                 createVueLanguagePlugin(
                     ts,
                     compilerOptions,
-                    resolveVueCompilerOptions({}),
+                    getDefaultCompilerOptions(),
                     uriConverter.asFileName
                 )
             ],
             languageServicePlugins: [
-                ...getFullLanguageServicePlugins(ts)
+                ...createTypeScriptServicePlugin(ts)
             ]
         });
 

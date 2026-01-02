@@ -5,14 +5,15 @@ export const INITIAL_CODE = `
     {{ hello }}
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+    export default defineComponent({
         name: 'Test',
         data() {
             return {
                 hello: 'Hello World!'
             };
         }
-    }
+    });
 </script>
 `.trim();

@@ -7,13 +7,14 @@
     "start": "webpack serve --open"
   },
   "dependencies": {
-    "@volar/jsdelivr": "^2.4.11",
-    "@volar/monaco": "^2.4.11",
-    "@vue/language-core": "^2.1.10",
-    "@vue/language-service": "^2.1.10",
+    "@volar/jsdelivr": "^2.4.27",
+    "@volar/monaco": "^2.4.27",
+    "@vue/language-core": "3.2.1",
+    "@vue/language-service": "3.2.1",
     "monaco-editor-core": "^0.47.0",
-    "vscode-uri": "^3.0.8",
-    "vue": "^3.5.13"
+    "volar-service-typescript": "0.0.68",
+    "vscode-uri": "3.1.0",
+    "vue": "3.5.26"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
